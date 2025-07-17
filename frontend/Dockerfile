@@ -15,6 +15,13 @@ COPY src/ ./src/
 
 # Verify files were copied correctly
 RUN ls -la src/
+RUN find /app/src -type f -name "*.ts*" -exec ls -la {} \;
+
+# Print the content of app.tsx for debugging
+RUN cat /app/src/app.tsx || echo "Failed to read app.tsx"
+
+# Try to find the app file
+RUN find /app -name "app.tsx" -o -name "App.tsx" || echo "No app.tsx or App.tsx found"
 
 # Build the application
 RUN npm run build
