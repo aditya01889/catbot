@@ -113,11 +113,11 @@ jobs:
           exit 1
         fi
         
-        # Install dependencies
-        echo "\nInstalling dependencies..."
-        npm ci --no-audit || {
+        # Install dependencies with legacy peer deps to handle TypeScript version conflicts
+        echo "\nInstalling dependencies with legacy peer deps..."
+        npm ci --no-audit --legacy-peer-deps || {
           echo "\nnpm ci failed, falling back to npm install..."
-          npm install --no-audit
+          npm install --no-audit --legacy-peer-deps
         }
     
     - name: Run tests
