@@ -66,6 +66,17 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
+        
+    - name: Debug - List repository contents
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "\nRepository contents:"
+        ls -la
+        echo "\nFrontend directory contents:"
+        ls -la frontend/
     
     - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
@@ -76,20 +87,29 @@ jobs:
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: |
-        # Debug: Show current directory and contents
-        echo "Current directory:"
-        pwd
-        echo "\nDirectory contents:"
-        ls -la
+        # Debug information
+        echo "Current directory: $(pwd)"
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
         
-        # Install dependencies using npm install first to generate package-lock.json if missing
+        # Generate package-lock.json if it doesn't exist
         if [ ! -f "package-lock.json" ]; then
-          echo "package-lock.json not found, running npm install..."
+          echo "package-lock.json not found, generating..."
           npm install --package-lock-only
         fi
         
-        # Install dependencies using the lock file
-        echo "\nInstalling dependencies using package-lock.json..."
+        # Verify package-lock.json exists
+        echo "\nVerifying package-lock.json exists..."
+        if [ -f "package-lock.json" ]; then
+          echo "package-lock.json exists, contents:"
+          head -n 10 package-lock.json
+        else
+          echo "ERROR: package-lock.json still not found after generation attempt"
+          exit 1
+        fi
+        
+        # Install dependencies
+        echo "\nInstalling dependencies..."
         npm ci --no-audit
     
     - name: Run tests
