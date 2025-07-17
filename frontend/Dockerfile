@@ -3,25 +3,18 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package*.json ./
+# Copy all files except those in .dockerignore
+COPY . .
 
 # Install dependencies
 RUN npm ci
-
-# Copy project files
-COPY public/ ./public/
-COPY src/ ./src/
 
 # Verify files were copied correctly
 RUN ls -la src/
 RUN find /app/src -type f -name "*.ts*" -exec ls -la {} \;
 
-# Print the content of app.tsx for debugging
-RUN cat /app/src/app.tsx || echo "Failed to read app.tsx"
-
-# Try to find the app file
-RUN find /app -name "app.tsx" -o -name "App.tsx" || echo "No app.tsx or App.tsx found"
+# Print the content of App.tsx for debugging
+RUN cat /app/src/App.tsx || echo "Failed to read App.tsx"
 
 # Build the application
 RUN npm run build
