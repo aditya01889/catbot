@@ -3,14 +3,18 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy project files
-COPY . .
+COPY public/ ./public/
+COPY src/ ./src/
+
+# Verify files were copied correctly
+RUN ls -la src/
 
 # Build the application
 RUN npm run build
