@@ -2,8 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders CatBot header', () => {
   render(<App />);
-  const linkElement = screen.getByText(/catbot/i);
-  expect(linkElement).toBeInTheDocument();
+  // Using getByRole with name for better accessibility
+  const headerElement = screen.getByRole('heading', { name: /🐱 CatBot/i });
+  expect(headerElement).toBeInTheDocument();
 });
