@@ -76,8 +76,11 @@ jobs:
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: |
-        npm install
-        npm ci
+        # Ensure we're in the correct directory
+        pwd
+        ls -la
+        # Install dependencies
+        npm ci --prefer-offline --no-audit
     
     - name: Run tests
       working-directory: ./frontend
