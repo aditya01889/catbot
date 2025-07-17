@@ -76,11 +76,21 @@ jobs:
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: |
-        # Ensure we're in the correct directory
+        # Debug: Show current directory and contents
+        echo "Current directory:"
         pwd
+        echo "\nDirectory contents:"
         ls -la
-        # Install dependencies
-        npm ci --prefer-offline --no-audit
+        
+        # Install dependencies using npm install first to generate package-lock.json if missing
+        if [ ! -f "package-lock.json" ]; then
+          echo "package-lock.json not found, running npm install..."
+          npm install --package-lock-only
+        fi
+        
+        # Install dependencies using the lock file
+        echo "\nInstalling dependencies using package-lock.json..."
+        npm ci --no-audit
     
     - name: Run tests
       working-directory: ./frontend
