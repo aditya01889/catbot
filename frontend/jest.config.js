@@ -2,6 +2,7 @@ module.exports = {
   // Use the same module resolution as TypeScript
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^(\\.{1,2}/.*)\\.[jt]sx?$': '$1',
   },
   // Explicitly set module directories
   moduleDirectories: ['node_modules', 'src'],
@@ -21,4 +22,6 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/build/'],
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  // Add support for TypeScript paths
+  roots: ['<rootDir>/src'],
 };
